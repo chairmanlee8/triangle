@@ -12,7 +12,7 @@ from tornado.escape import json_encode, json_decode
 
 define("address", default="", help="run on the given address", type=str)
 define("port", default=8080, help="run on the given port", type=int)
-define("debug", default=0, help="debug mode", type=int)
+define("debug", default=1, help="debug mode", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
