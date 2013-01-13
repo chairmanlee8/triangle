@@ -12,11 +12,17 @@ from tornado.escape import json_encode, json_decode
 
 define("address", default="", help="run on the given address", type=str)
 define("port", default=8080, help="run on the given port", type=int)
+define("debug", default=0, help="debug mode", type=int)
 
 class Application(tornado.web.Application):
     def __init__(self):
         conn = pymongo.Connection("localhost", 27017)
         self.db = conn['triangle']
+
+        if options.debug == 0:
+            options.debug = False
+        else:
+            options.debug = True
 
         # Will need login_url for settings
         settings = dict(
@@ -26,7 +32,7 @@ class Application(tornado.web.Application):
             socket_io_port = options.port,
             socket_io_address = options.address,
             login_url="/auth/login",
-            debug = True
+            debug = options.debug
         )
 
         handlers = [
