@@ -38,6 +38,9 @@ class Application(tornado.web.Application):
 
             # Favicon
             (r"/favicon.ico", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),
+
+            # Robots.txt
+            (r"/robots.txt", tornado.web.StaticFileHandler, dict(path=settings['static_path'])),
         ]
 
         tornado.web.Application.__init__(self, handlers, **settings)
