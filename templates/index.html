@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        .pagination {
+            margin: 6px 0 0;
+            float: right;
+            list-style: none;
+        }
+
+        .pagination li {
+            float: left;
+            margin 0 1px;
+        }
+
+        .pagination li a {
+            display: block;
+            width: 13px;
+            height: 0;
+            padding-top: 13px;
+            background-image: url(/static/images/pagination.png);
+            background-position: 0 0;
+            float: left;
+            overflow: hidden;
+        }
+
+        .pagination li.current a, .pagination li.current a:hover { background-position: 0 -13px; }
+        .pagination li a:hover { background-position: 0 -26px; }
+
+        table {
+            border: 1px solid #bbb;
+        }
+
+        table td,th {
+            border: 1px solid #bbb;
+            padding: 5px;
+        }
+    </style>
+{% end %}
+
+{% block prependBody %}
+    <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php/en_US" type="text/javascript"></script>
+    <script type="text/javascript">FB.init("f34ef8644fe3a34c406f46088d0f499f");</script>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div>
+            {% if user %}
+                <span class="nav-link nav-current">Announce</span>
+                <span class="nav-link">Calendar</span>
+                <span class="nav-link">Rush</span>
+                <span class="nav-link">Members</span>
+                <span class="nav-link">Store</span>
+                <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
+            {% else %}
+                <span class="nav-link nav-current">About</span>
+                <span class="nav-link">Rush</span>
+                <span class="nav-link">Philanthropy</span>
+                <span class="nav-link">Scholarship</span>
+                <span class="nav-link">Members</span>
+                <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
+            {% end %}
+        </div>
+        <div style="padding-top: 4px;">
+            <!--<span class="subnav-link subnav-current">Welcome</span>-->
+        </div>
+    </div>
+    <div class="clear" style="height: 20px;"></div>
+    {% if user %}
+    {% else %}
+        <div class="grid_16">
+            <div id="slides">
+                <div class="slides_container">
+                    <img src="/static/images/1.JPG" width="960" height="300" alt="Photo nigga" />
+                    <img src="/static/images/2.JPG" width="960" height="300" alt="Photo nigga" />
+                    <img src="/static/images/3.JPG" width="960" height="300" alt="Photo nigga" />
+                    <img src="/static/images/4.JPG" width="960" height="300" alt="Photo nigga" />
+                    <img src="/static/images/5.JPG" width="960" height="300" alt="Photo nigga" />
+                    <img src="/static/images/6.JPG" width="960" height="300" alt="Photo nigga" />
+                </div>
+                <a href="#" class="prev"><i class="icon-chevron-left icon-small"></i></a>
+                <a href="#" class="next"><i class="icon-chevron-right icon-small"></i></a>
+            </div>
+        </div>
+
+        <div class="clear" style="height: 20px;"></div>
+        <div class="grid_11" style="text-align: justify;">
+            <p>For over 100 years, Triangle Fraternity has provided an environment which fosters personal growth and professional success. Triangle is a brotherhood where undergraduates in engineering, architecture and science can develop long-lasting friendships and connections with a nationwide network of alumni.</p><br/>
+
+            <p>Triangle is active in both the Illinois and Greek community. With the University, we participate as Engineering Council representatives, compete in the EOH Robot Competition, and host dinners with U of I professors. In the Greek community, we host social exchanges with sororities and women's groups on campus, have brotherhood events or our membership, and spearhead philanthropy efforts all throughout the year.</p><br/>
+
+            <h2 style="font-size: 2em;">Join us for Spring Rush 2013!</h2>
+
+            <p>All rush events will begin at our chapter home at <a href="http://maps.google.com/?q=112%20E%20Daniel%20St%20Champaign%20IL" target="_new">112 E Daniel St</a> (2nd and Daniel) in Champaign. Feel free to email <a href="mailto:triangle.uiuc.rvp@gmail.com">triangle.uiuc.rvp@gmail.com</a> for information.</p><br/>
+
+            <table>
+                <thead><tr><th style="width: 110px;">Date</th><th style="width: 75px;">Time</th><th>Event</th></tr></thead>
+                <tbody>
+                    <tr><td>1/15 (Tue)</td><td>5pm</td><td>Taco Tuesday</td></tr>
+                    <tr><td></td><td>7pm</td><td>Dodgeball</td></tr>
+                    <tr><td>1/16 (Wed)</td><td>7pm</td><td>Videogame Night (FIFA, NBA2K, Halo and more)</td></tr>
+                    <tr><td>1/17 (Thu)</td><td>5pm</td><td>Wing Night + Illinois vs. NU (limited number of tickets available)</td></tr>
+                    <tr><td>1/22 (Tue)</td><td>7pm</td><td>Board Game Night</td></tr>
+                    <tr><td>1/23 (Wed)</td><td>7pm</td><td>Poker Night</td></tr>
+                    <tr><td>1/24 (Thu)</td><td>7pm</td><td>Nerf Wars</td></tr>
+                    <tr><td>1/29 (Tue)</td><td>7pm</td><td>Bowling Night</td></tr>
+                    <tr><td>1/30 (Wed)</td><td>7pm</td><td>Computer Smash</td></tr>
+                    <tr><td>1/31 (Thu)</td><td>7pm</td><td>Card Game Night</td></tr>
+                    <tr><td>2/3 (Sun)</td><td>All-day</td><td>Superbowl</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="grid_5">
+            <fb:fan profile_id="124723071469" stream="1" connections="10" width="280" height="600"></fb:fan>
+        </div>
+    {% end %}
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+    <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("#slides").slides({
+                play: 5000,
+                pause: 2500,
+                effect: "fade",
+                crossfade: true,
+                hoverPause: true
+            });
+        });
+    </script>
+{% end %}

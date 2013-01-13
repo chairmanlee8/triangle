@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <style type="text/css">
+        #pnm-table {
+            table-layout: fixed;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 940px;
+        }
+
+        #pnm-table caption {
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        #pnm-table th {
+            padding: 5px;
+        }
+
+        #pnm-table td {
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 5px;
+        }
+
+        .pnm-bid select {
+            width: 90px;
+            font-family: 'Monda', sans-serif;
+        }
+
+        .pnm-x img {
+            position: relative;
+            top: -2px;
+        }
+
+        .pnm-no-content {
+            vertical-align: middle;
+            text-align: center;
+            color: #bbb;
+        }
+
+        .pnm-no-content div {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            border: 1px dotted #bbb;
+        }
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div>
+            <span class="nav-link">Announce</span>
+            <span class="nav-link">Calendar</span>
+            <span class="nav-link nav-current">Rush</span>
+            <span class="nav-link">Members</span>
+            <span class="nav-link">Store</span>
+            <span class="nav-link nav-logout">Logout</span>
+        </div>
+        <div style="padding-top: 4px;">
+            <span class="subnav-link subnav-current">PNM List</span>
+            <span class="subnav-link">Suggest PNM</span>
+        </div>
+    </div>
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_16">
+        <table id="pnm-table">
+            <caption>PNM List <div style="float: right;"><img src="/static/images/csvexport.png" /></div></caption>
+            <thead>
+                <tr>
+                    <th style="width: 51px;">Photo</th>
+                    <th style="">Name</th>
+                    <th style="width: 150px;">Email</th>
+                    <th style="width: 150px;">Phone</th>
+                    <th style="width: 100px;">Status</th>
+                    <th style="width: 100px;">Last Seen</th>
+                    <th style="width: 60px;">Endorse</th>
+                    <th style="width: 70px;"></th>
+                    <th style="width: 20px;"></th>
+                </tr>
+            </thead>
+            <tbody id="pnm-sort">
+                <tr>
+                    <td class="pnm-no-content" colspan="9"><div>No content :(</div></td>
+                </tr>
+                <tr>
+                    <td><img src="/static/images/anonymous.png" /></td>
+                    <td class="pnm-edit">Nate aSDFasdfasdf</td>
+                    <td class="pnm-edit">smiley325squared@gmail.com</td>
+                    <td class="pnm-edit">1-800-347-6666</td>
+                    <td class="pnm-bid">None</td>
+                    <td>Never</td>
+                    <td>0</td>
+                    <td><a href="#">Notes</a></td>
+                    <td class="pnm-x"><img src="/static/images/x-button.png" /></td>
+                </tr>
+                <tr>
+                    <td><img src="/static/images/anonymous.png" /></td>
+                    <td class="pnm-edit">Nate</td>
+                    <td class="pnm-edit">asdf@asdf</td>
+                    <td class="pnm-edit">1-800-FAGGOT</td>
+                    <td class="pnm-bid">None</td>
+                    <td>Never</td>
+                    <td>0</td>
+                    <td><a href="#">Notes</a></td>
+                    <td class="pnm-x"><img src="/static/images/x-button.png" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("#pnm-sort").sortable({distance: 15});
+
+            $(".pnm-edit").editable(function(v) { return "asdf"; });
+
+            $(".pnm-bid").editable(function(v) { return v; }, {
+                data    : "{'Bid Out': 'Bid Out', 'Do Not Bid': 'Do Not Bid', 'Accepted': 'Accepted', 'None': 'None'}",
+                type    : "select"
+            });
+
+            $(".pnm-bid select").live("change", function () { $(this).parent().submit(); });
+        });
+    </script>
+{% end %}

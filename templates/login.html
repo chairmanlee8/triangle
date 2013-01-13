@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        .container_16 {
+            width: 540px;
+        }
+
+        .fancyText {
+            font-family: 'Monda', sans-serif;
+            border: 1px solid #bbb;
+            font-size: 14px;
+            padding: 4px;
+            width: 210px;
+            margin-bottom: 4px;
+        }
+    </style>
+{% end %}
+
+{% block outerContent %}
+    <div class="container_16">
+        <div class="clear" style="height: 10px;"></div>
+        <div class="grid_4 suffix_1">
+            <img src="/static/images/trilogo-red.png" />
+        </div>
+        <div class="grid_4">
+            <div id="login-failed" style="display: none; font-size: 12px; background-color: #ffbbbb; padding: 2px 5px;">Invalid credentials.</div>
+            <form name="login" action="/auth/login" method="post">
+                <input type="hidden" name="redirect" value="/" />
+                <div><input class="fancyText" type="text" name="username" placeholder="Username" /></div>
+                <div><input class="fancyText" type="password" name="password" placeholder="Password" /></div>
+                <div style="float: right; margin-top: 2px;"><span id="login-button" class="nav-link nav-logout" style="cursor: pointer;">Login</span></div>
+            </form>
+        </div>
+        <div class="clear" style="height: 10px;"></div>
+    </div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+
+    <script type="text/javascript">
+        function getURLParameter(name) {
+            return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);
+        }
+
+        $(window).resize(function () {
+            $(".container_16").css("margin-top", ($(window).height() - $(".container_16").height()) * 0.45 + "px");
+        });
+
+        $(document).ready(function ()
+        {
+            $("input[name=username]").focus();
+            $(window).resize();
+
+            if(getURLParameter("error") === "failed") {
+                $("#login-failed").show();
+            }
+
+            $("#login-button").click(function () { $("form[name=login]").submit(); });
+            $(document).keypress(function (e) {
+                if(e.which == 13) {
+                    $("#login-button").click();
+                }
+            });
+        });
+    </script>
+{% end %}

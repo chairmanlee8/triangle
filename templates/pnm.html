@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <style type="text/css">
+        #pnm-edit-area form textarea {
+            width: 400px;
+            height: 400px;
+        }
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div>
+            <span class="nav-link">Announce</span>
+            <span class="nav-link">Calendar</span>
+            <span class="nav-link nav-current">Rush</span>
+            <span class="nav-link">Members</span>
+            <span class="nav-link">Store</span>
+            <span class="nav-link nav-logout">Logout</span>
+        </div>
+        <div style="padding-top: 4px;">
+            <a href="/"><span class="subnav-link">PNM List</span></a>
+            <span class="subnav-link subnav-current">PNM Detail</span>
+            <span class="subnav-link">Suggest PNM</span>
+        </div>
+    </div>
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_6" style="text-align: center; border: 1px solid black;">
+        <div>
+            <img src="/static/images/anonymous-large.png" />
+        </div>
+        <div>
+            <b id="pnm-name">His Royal Highness Siddartha M Indianapaguptabrnamian III</b>
+        </div>
+        <div>
+        </div>
+    </div>
+    <div class="grid_9">
+        <div id="pnm-email" style="border: 1px solid black;">
+            Email
+        </div>
+        <div id="pnm-phone" style="border: 1px solid black;">
+            Phone
+        </div>
+        <div id="pnm-facebook" style="border: 1px solid black;">
+            Facebook
+        </div>
+        <div id="pnm-edit-area" style="border: 1px solid black;">
+            Lorem ipsum.
+        </div>
+    </div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            $("#pnm-name").editable(function (v) { return v; });
+            $("#pnm-name input").live("blur", function() { $(this).parent().submit(); });
+            $("#pnm-email").editable(function (v) { return v; });
+            $("#pnm-email input").live("blur", function() { $(this).parent().submit(); });
+            $("#pnm-phone").editable(function (v) { return v; });
+            $("#pnm-phone input").live("blur", function() { $(this).parent().submit(); });
+            $("#pnm-facebook").editable(function (v) { return v; });
+            $("#pnm-facebook input").live("blur", function() { $(this).parent().submit(); });
+
+            $("#pnm-edit-area").editable(function(v) { return v; }, {
+                type    : "textarea",
+                height  : "400px",
+                width   : "500px"
+            });
+
+            $("#pnm-edit-area textarea").live("blur", function() {
+                $(this).parent().submit();
+            });
+        });
+    </script>
+{% end %}
