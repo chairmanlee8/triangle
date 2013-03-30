@@ -51,20 +51,15 @@
         <img src="/static/images/trilogo-red.png" />
     </div>
     <div class="grid_11" style="padding-top: 51px;">
-        <div>
+        <div style="float: right;">
+            <span class="nav-link nav-current">About</span>
+            <span class="nav-link">Rush</span>
+            <span class="nav-link">Philanthropy</span>
+            <span class="nav-link">Scholarship</span>
+            <span class="nav-link">Members</span>
             {% if user %}
-                <span class="nav-link nav-current">Announce</span>
-                <span class="nav-link">Calendar</span>
-                <span class="nav-link">Rush</span>
-                <span class="nav-link">Members</span>
-                <span class="nav-link">Store</span>
                 <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
             {% else %}
-                <span class="nav-link nav-current">About</span>
-                <span class="nav-link">Rush</span>
-                <span class="nav-link">Philanthropy</span>
-                <span class="nav-link">Scholarship</span>
-                <span class="nav-link">Members</span>
                 <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
             {% end %}
         </div>
