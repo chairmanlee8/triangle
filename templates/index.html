@@ -73,57 +73,48 @@
         </div>
     </div>
     <div class="clear" style="height: 20px;"></div>
-    {% if user %}
-    {% else %}
-        <div class="grid_16">
-            <div id="slides">
-                <div class="slides_container">
-                    <img src="/static/images/gallery/1.jpg" width="960" height="300" alt="Photo" />
-                    <img src="/static/images/gallery/2.jpg" width="960" height="300" alt="Photo" />
-                    <img src="/static/images/gallery/3.jpg" width="960" height="300" alt="Photo" />
-                </div>
-                <a href="#" class="prev"><i class="icon-chevron-left icon-small"></i></a>
-                <a href="#" class="next"><i class="icon-chevron-right icon-small"></i></a>
+    <div class="grid_16">
+        <div id="slides">
+            <div class="slides_container">
+                <img src="/static/images/gallery/1.jpg" width="960" height="300" alt="Photo" />
+                <img src="/static/images/gallery/2.jpg" width="960" height="300" alt="Photo" />
+                <img src="/static/images/gallery/3.jpg" width="960" height="300" alt="Photo" />
             </div>
+            <a href="#" class="prev"><i class="icon-chevron-left icon-small"></i></a>
+            <a href="#" class="next"><i class="icon-chevron-right icon-small"></i></a>
         </div>
+    </div>
 
-        <div class="clear" style="height: 20px;"></div>
-        <div class="grid_11" style="text-align: justify;">
-            <p>For over 100 years, Triangle Fraternity has provided an environment which fosters personal growth and professional success. Triangle is a brotherhood where undergraduates in engineering, architecture and science can develop long-lasting friendships and connections with a nationwide network of alumni.</p><br/>
-
-            <p>Triangle is active in both the Illinois and Greek community. With the University, we participate as Engineering Council representatives, compete in the EOH Robot Competition, and host dinners with U of I professors. In the Greek community, we host social exchanges with sororities and women's groups on campus, have brotherhood events or our membership, and spearhead philanthropy efforts all throughout the year.</p><br/>
-
-            <h2 style="font-size: 2em;">Join us for Spring Rush 2013!</h2>
-
-            <p>All rush events will begin at our chapter home at <a href="http://maps.google.com/?q=112%20E%20Daniel%20St%20Champaign%20IL" target="_new">112 E Daniel St</a> (2nd and Daniel) in Champaign. Feel free to email <a href="mailto:triangle.uiuc.rvp@gmail.com">triangle.uiuc.rvp@gmail.com</a> for information.</p><br/>
-
-            <table>
-                <thead><tr><th style="width: 110px;">Date</th><th style="width: 75px;">Time</th><th>Event</th></tr></thead>
-                <tbody>
-                    <tr><td>1/15 (Tue)</td><td>5pm</td><td>Taco Tuesday</td></tr>
-                    <tr><td></td><td>7pm</td><td>Dodgeball</td></tr>
-                    <tr><td>1/16 (Wed)</td><td>7pm</td><td>Videogame Night (FIFA, NBA2K, Halo and more)</td></tr>
-                    <tr><td>1/17 (Thu)</td><td>5pm</td><td>Wing Night + Illinois vs. NU (limited number of tickets available)</td></tr>
-                    <tr><td>1/22 (Tue)</td><td>7pm</td><td>Board Game Night</td></tr>
-                    <tr><td>1/23 (Wed)</td><td>7pm</td><td>Nerf Wars</td></tr>
-                    <tr><td>1/24 (Thu)</td><td>7pm</td><td>Poker Night</td></tr>
-                    <tr><td>1/29 (Tue)</td><td>7pm</td><td>Bowling Night</td></tr>
-                    <tr><td>1/30 (Wed)</td><td>7pm</td><td>Computer Smash</td></tr>
-                    <tr><td>1/31 (Thu)</td><td>7pm</td><td>Card Game Night</td></tr>
-                    <tr><td>2/3 (Sun)</td><td>All-day</td><td>Superbowl</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="grid_5">
-            <fb:fan profile_id="124723071469" stream="1" connections="10" width="280" height="600"></fb:fan>
-        </div>
-    {% end %}
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_11" style="text-align: justify;">
+        <div class="content-head" data-name="index-top-matter"></div><br/>
+        <div class="content-head" data-name="index-bottom-matter"></div>
+    </div>
+    <div class="grid_5">
+        <fb:fan profile_id="124723071469" stream="1" connections="10" width="280" height="600"></fb:fan>
+    </div>
     <div class="clear" style="height: 10px;"></div>
 {% end %}
 
 {% block appendBody %}
     <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
     <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/content.js"></script>
+
+    <script type="text/html" id="content-template">
+        {% if user %}
+            <div class="content-controller">
+                <div style="cursor: pointer; float: left;" class="content-edit"><i class="icon-pencil"></i> Edit This Section</div>
+                <div style="cursor: pointer; float: left; display: none;" class="content-save"><i class="icon-upload-alt"></i> Save Changes</div>
+                <div style="cursor: pointer; float: right; display: none;" class="content-cancel"><i class="icon-remove"></i> Cancel</div>
+            </div>
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% else %}
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% end %}
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function ()
@@ -135,6 +126,8 @@
                 crossfade: true,
                 hoverPause: true
             });
+
+            content_init();
         });
     </script>
 {% end %}
