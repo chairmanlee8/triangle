@@ -6,6 +6,7 @@ import tornado.auth
 import tornadio2
 import pymongo
 import hashlib
+import random
 
 from tornado.options import define, options
 from tornado.escape import json_encode, json_decode
@@ -38,6 +39,8 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
+            (r"/invite", InviteHandler),
+            (r"/register", RegisterHandler),
             (r"/philanthropy", PhilanthropyHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
@@ -88,6 +91,59 @@ class IndexHandler(BaseHandler):
     def get(self):
         u = self.get_current_user()
         self.render("index.html", user=u.get("handle", None))
+
+class InviteHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        if u and u['superuser']:
+            self.render("invite.html")
+        else:
+            self.redirect('/')
+
+    def post(self):
+        u = self.get_current_user()
+        if not u or not u['superuser']:
+            raise HTTPError(403)
+
+        username = self.get_argument("username")
+        regcode = ''.join(random.choice("abcdefghijklmnopqrstuvwxyz0123456789") for i in range(20))
+        coll = self.application.db["invitations"]
+        coll.save({"regcode": regcode, "username": username})
+
+        self.redirect("/register?regcode=%s&username=%s" % (regcode, username))
+
+class RegisterHandler(BaseHandler):
+    def get(self):
+        self.render("register.html")
+
+    def post(self):
+        username = self.get_argument("username", '')
+        regcode = self.get_argument("regcode", '')
+        password = self.get_argument("password", '')
+        password2 = self.get_argument("password2", '')
+
+        # Check that the regcode exists and matches the username assigned to it
+        coll = self.application.db["invitations"]
+        result = coll.find_one({"regcode": regcode, "username": username})
+
+        if result is None:
+            self.redirect("/register?regcode=%s&username=%s&error=noreg" % (regcode, username))
+            return
+
+        if len(password) < 5:
+            self.redirect("/register?regcode=%s&username=%s&error=shortpass" % (regcode, username))
+            return
+
+        if password != password2:
+            self.redirect("/register?regcode=%s&username=%s&error=passmatch" % (regcode, username))
+            return
+
+        # Passed all the reqs, create the user
+        new_user = {"handle": username, "password": hashlib.sha1(password).hexdigest(), "superuser": 0}
+        self.application.db["users"].save(new_user)
+        coll.remove(result)
+
+        self.redirect('/auth/login')
 
 class PhilanthropyHandler(BaseHandler):
     def get(self):

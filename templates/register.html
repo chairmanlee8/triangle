@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        .container_16 {
+            width: 540px;
+        }
+
+        .fancyText {
+            font-family: 'Monda', sans-serif;
+            border: 1px solid #bbb;
+            font-size: 14px;
+            padding: 4px;
+            width: 210px;
+            margin-bottom: 4px;
+        }
+    </style>
+{% end %}
+
+{% block outerContent %}
+    <div class="container_16">
+        <div class="clear" style="height: 10px;"></div>
+        <div class="grid_4 suffix_1">
+            <img src="/static/images/trilogo-red.png" />
+        </div>
+        <div class="grid_4">
+            <h2>Register</h2>
+            <div id="register-failed" style="display: none; font-size: 12px; background-color: #ffbbbb; padding: 2px 5px;">Registration failed.</div>
+            <form name="register" action="/register" method="post">
+                <input type="hidden" name="redirect" value="/" />
+                <input type="hidden" name="regcode" value="" />
+                <div><input class="fancyText" type="text" name="username" placeholder="Username" readonly /></div>
+                <div><input class="fancyText" type="password" name="password" placeholder="Password" /></div>
+                <div><input class="fancyText" type="password" name="password2" placeholder="Confirm Password" /></div>
+                <div style="float: right; margin-top: 2px;"><span id="register-button" class="nav-link nav-logout" style="cursor: pointer;">Register</span></div>
+            </form>
+        </div>
+        <div class="clear" style="height: 10px;"></div>
+    </div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+
+    <script type="text/javascript">
+        function getURLParameter(name) {
+            return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]);
+        }
+
+        $(window).resize(function () {
+            $(".container_16").css("margin-top", ($(window).height() - $(".container_16").height()) * 0.45 + "px");
+        });
+
+        $(document).ready(function ()
+        {
+            // Prepopulate fields
+            $("input[name=regcode]").val(getURLParameter("regcode"));
+            $("input[name=username]").val(getURLParameter("username"));
+            $("input[name=username]").focus();
+
+            $(window).resize();
+
+            if(getURLParameter("error") != "null") {
+                var etext = "";
+                switch(getURLParameter("error")) {
+                    case "noreg": etext = "Username " + getURLParameter("username") + " is not currently invited to register."; break;
+                    case "shortpass": etext = "Password too short."; break;
+                    case "passmatch": etext = "Passwords did not match."; break;
+                    default: etext = "An error occurred."; break;
+                }
+                $("#register-failed").text(etext).show();
+            }
+
+            $("#register-button").click(function () { $("form[name=register]").submit(); });
+            $(document).keypress(function (e) {
+                if(e.which == 13) {
+                    $("#register-button").click();
+                }
+            });
+        });
+    </script>
+{% end %}
