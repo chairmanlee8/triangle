@@ -8,6 +8,10 @@ a {
     text-decoration: none;
 }
 
+a span {
+    color: black;
+}
+
 .container_16 {
     background: #fff;
     margin-top: 20px;

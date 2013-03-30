@@ -3,7 +3,12 @@ function content_init() {
     $(".content-head").each(function () {
         // Prepend the editing info
         var self = this;
+        var defaultContent = $(this).html();
+        $(this).html('');
         $(this).append($("#content-template").html());
+
+        // Load defaults
+        $(this).find(".content-view").html(defaultContent);
 
         // Load the content
         $.get("/content/" + $(this).data("name"), function (data) {

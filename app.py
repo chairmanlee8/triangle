@@ -38,6 +38,7 @@ class Application(tornado.web.Application):
 
         handlers = [
             (r"/", IndexHandler),
+            (r"/philanthropy", PhilanthropyHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
             (r"/content/([-\w]+)", ContentHandler),
@@ -54,7 +55,7 @@ class Application(tornado.web.Application):
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         coll = self.application.db["users"]
-        return coll.find_one({"handle": self.get_secure_cookie("user")})
+        return coll.find_one({"handle": self.get_secure_cookie("user")}) or {}
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -86,10 +87,12 @@ class LogoutHandler(BaseHandler):
 class IndexHandler(BaseHandler):
     def get(self):
         u = self.get_current_user()
-        uname = None
-        if u:
-            uname = u['handle']
-        self.render("index.html", user=uname)
+        self.render("index.html", user=u.get("handle", None))
+
+class PhilanthropyHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        self.render("philanthropy.html", user=u.get("handle", None))
 
 class ContentHandler(BaseHandler):
     def get(self, what):

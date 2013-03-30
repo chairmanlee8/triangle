@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+
+    <style type="text/css">
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div style="float: right;">
+            <a href="/"><span class="nav-link">About</span></a>
+            <span class="nav-link">Rush</span>
+            <span class="nav-link nav-current">Philanthropy</span>
+            <span class="nav-link">Scholarship</span>
+            <span class="nav-link">Members</span>
+            {% if user %}
+                <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
+            {% else %}
+                <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
+            {% end %}
+        </div>
+        <div style="padding-top: 4px;">
+            <!--<span class="subnav-link subnav-current">Welcome</span>-->
+        </div>
+    </div>
+
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_10 suffix_2" style="text-align: justify;">
+        <div class="content-head" style="float: left;" data-name="philanthropy-matter">This year Triangle is hosting philanthropy.</div>
+    </div>
+    <div class="grid_4">
+        <div style="float: right; box-shadow: 0 0 5px #888;">
+            <img style="width: 319px; height: 412px;" src="/static/images/laser-wars-poster.jpg" />
+        </div>
+    </div>
+
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+    <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/content.js"></script>
+
+    <script type="text/html" id="content-template">
+        {% if user %}
+            <div class="content-controller">
+                <div style="cursor: pointer; float: left;" class="content-edit"><i class="icon-pencil"></i> Edit This Section</div>
+                <div style="cursor: pointer; float: left; display: none;" class="content-save"><i class="icon-upload-alt"></i> Save Changes</div>
+                <div style="cursor: pointer; float: right; display: none;" class="content-cancel"><i class="icon-remove"></i> Cancel</div>
+            </div>
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% else %}
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% end %}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            content_init();
+        });
+    </script>
+{% end %}
