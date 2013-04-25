@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        p {
+            margin-top: 1em;
+        }
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div style="float: right;">
+            <a href="/"><span class="nav-link">About</span></a>
+            <span class="nav-link">Rush</span>
+            <span class="nav-link">Philanthropy</span>
+            <span class="nav-link nav-current">Scholarship</span>
+            <span class="nav-link">Members</span>
+            {% if user %}
+                <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
+            {% else %}
+                <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
+            {% end %}
+        </div>
+        <div style="padding-top: 4px;">
+            <!--<span class="subnav-link subnav-current">Welcome</span>-->
+        </div>
+    </div>
+
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_10" style="text-align: justify;">
+        <div class="content-head" style="float: left;" data-name="scholarship-matter">
+            <p><b>What is the <span style="font-size: 1.2em; color: gray;">Triangle Fraternity Scholarship?</span></b></p>
+
+            <p>The Triangle Fraternity Scholarship is awarded to four students who have displayed exemplary progress in academic excellence, community involvement, leadership, and personal balance. All incoming male freshmen studying science, engineering, or architecture are eligible. Triangle promotes a strong individual character that includes a blend of academic excellence, personal and leadership skills, and personal balance. We pride ourselves on having members who exemplify these qualities and thus select the best students in each incoming freshman class. We will invite four applicants to accept this award and live with us. The scholarship provides a reduced room and board cost of $6150 during the 2013-2014 academic year. This amount is a substantial $4500 less than the cost of living in a University Residence Hall.</p>
+
+            <p>As a fraternity that encourages the growth of talented, hard-working men, we expect that our winners will reap numerous benefits from living at Triangle. In turn, we believe these individuals will strengthen our brotherhood and ideals. As an incoming freshman, you will be faced with many important decisions in every aspect of your life. You will be challenged to balance your academic demands and to simultaneously develop the relationships and personal skills that will provide you with numerous intangible benefits for the rest of your personal and working life.</p>
+
+            <p>All applicants will be judged on their academic excellence, community involvement, leadership experience, and overall individual balance. We will contact the top 15 students to set up an interview with members of the Triangle active and alumni chapter. All winners will become members of Triangle Fraternity upon successful completion of our standard new member process. Triangle has a strict anti-hazing policy and we have a flexible new member program to ensure the sustained focus on academic excellence that we expect from all of our members.</p>
+
+            <p>Interested students and their families are encouraged to arrange a visit with us to experience Triangle first-hand. We realize that the decision to apply for such an award necessitates a great deal of consideration and deliberation, and we are happy to answer any questions or address any concerns you have.</p>
+
+            <p>We hope that this letter has provided you with some insight into the benefits of the scholarship and what Triangle Fraternity has to offer. 2013 marks Triangle's 107th year on the University of Illinois campus, and during these years, Triangle has produced some of the most successful engineers, architects, and scientists in the world. We hope that you will become a part of our tradition and we look forward to being in contact with you.</p>
+
+            <p>Applications are considered on a rolling basis and close July 31, 2013.</p>
+
+            <div style="float: right; width: 120px; margin-top: 20px; padding: 5px 20px; text-align: center; background-color: #888">
+                <b>Apply Now</b>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid_6">
+        <a href="/static/images/triangleataglance.png" target="_blank"><img src="/static/images/triangleataglance-small.png" style="width: 330px; margin-top: 70px; box-shadow: 0 0 5px #888;"/></a><br/>
+        <div style="margin-left: auto; margin-right: auto; color: #888;">
+            <a href="/static/images/triangleataglance.png" target="_blank">Click to enlarge. <i class="icon-zoom-in" style="position: relative; top: -1px;"></i></a>
+        </div>
+    </div>
+
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+    <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/content.js"></script>
+
+    <script type="text/html" id="content-template">
+        {% if user %}
+            <div class="content-controller">
+                <div style="cursor: pointer; float: left;" class="content-edit"><i class="icon-pencil"></i> Edit This Section</div>
+                <div style="cursor: pointer; float: left; display: none;" class="content-save"><i class="icon-upload-alt"></i> Save Changes</div>
+                <div style="cursor: pointer; float: right; display: none;" class="content-cancel"><i class="icon-remove"></i> Cancel</div>
+            </div>
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% else %}
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% end %}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            content_init();
+        });
+    </script>
+{% end %}

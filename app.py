@@ -42,6 +42,7 @@ class Application(tornado.web.Application):
             (r"/invite", InviteHandler),
             (r"/register", RegisterHandler),
             (r"/philanthropy", PhilanthropyHandler),
+            (r"/scholarship", ScholarshipHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
             (r"/content/([-\w]+)", ContentHandler),
@@ -149,6 +150,11 @@ class PhilanthropyHandler(BaseHandler):
     def get(self):
         u = self.get_current_user()
         self.render("philanthropy.html", user=u.get("handle", None))
+
+class ScholarshipHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        self.render("scholarship.html", user=u.get("handle", None))
 
 class ContentHandler(BaseHandler):
     def get(self, what):
