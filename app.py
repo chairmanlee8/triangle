@@ -181,7 +181,7 @@ class ScholarshipApplyHandler(BaseHandler):
                            'hsrank', 'uiucmajor', 'extracurricular', 'awards',
                            'workexperience', 'interests', 'personalstatement',
                            'legacy']
-        doc = {k: "" for k in form_req_params}
+        doc = dict((k, "") for k in form_req_params)
         doc["application_id"] = ""
 
         if application_id is not None:
@@ -208,7 +208,7 @@ class ScholarshipApplyHandler(BaseHandler):
                            'hsrank', 'uiucmajor', 'extracurricular', 'awards',
                            'workexperience', 'interests', 'personalstatement',
                            'legacy']
-        doc = {k: "" for k in form_req_params}
+        doc = dict((k, "") for k in form_req_params)
         doc["application_id"] = ""
 
         # TODO: application_id assignment process is not thread-safe.
