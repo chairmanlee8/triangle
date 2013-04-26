@@ -7,6 +7,10 @@ import tornadio2
 import pymongo
 import hashlib
 import random
+from datetime import datetime
+
+import smtplib
+from email.MIMEText import MIMEText
 
 from tornado.options import define, options
 from tornado.escape import json_encode, json_decode
@@ -15,6 +19,15 @@ from tornado.web import HTTPError
 define("address", default="", help="run on the given address", type=str)
 define("port", default=8080, help="run on the given port", type=int)
 define("debug", default=1, help="debug mode", type=int)
+
+def tod(hour):
+    # Convert hour [0..23] to 'morning', 'afternoon', or 'evening'
+    if hour < 12:
+        return 'morning'
+    elif hour < 17:
+        return 'afternoon'
+    else:
+        return 'evening'
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -227,6 +240,37 @@ class ScholarshipApplyHandler(BaseHandler):
             # Submit this application.
             doc["finalized"] = True
             coll.save(doc)
+
+            # Email to the RVP
+            guser = 'triangle.scholarship@gmail.com'
+            gpass = 'schwerin1'
+            mailer = smtplib.SMTP('smtp.gmail.com:587')
+            mailer.starttls()
+            mailer.login(guser, gpass)
+
+            fromaddr = 'triangle.scholarship@gmail.com'
+            toaddr = 'triangle.uiuc.rvp@gmail.com'
+            sc_url = 'http://www.illinoistriangle.com/scholarship/apply?application_id=%s' % doc["application_id"]
+            message = 'Good %s Mr. RVP:<br/><br/>A scholarship application has been submitted, please review it here: <a href="%s">%s</a><br/><br/>At your service,<br/>Triangle Overmind' % (tod(datetime.now().hour), sc_url, sc_url)
+
+            # Encode the email
+            # http://mg.pov.lt/blog/unicode-emails-in-python.html
+            header_charset = 'ISO-8859-1'
+            for body_charset in 'US-ASCII', 'ISO-8859-1', 'UTF-8':
+                try:
+                    message.encode(body_charset)
+                except UnicodeError:
+                    pass
+                else:
+                    break
+
+            email_body = MIMEText(message.encode(body_charset), 'html', body_charset)
+            email_body['From'] = fromaddr
+            email_body['To'] = toaddr
+            email_body['Subject'] = unicode("Scholarship Application Submitted: %s" % datetime.now().strftime("%A, %B %d, %Y"))
+            
+            mailer.sendmail(fromaddr, toaddr, email_body.as_string())
+            mailer.quit()
 
         # Render page, no errors (normal behavior)
         self.render("scholarship-apply.html", user=u.get("handle", None), form_data=doc, error=None)
