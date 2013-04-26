@@ -43,6 +43,7 @@ class Application(tornado.web.Application):
             (r"/register", RegisterHandler),
             (r"/philanthropy", PhilanthropyHandler),
             (r"/scholarship", ScholarshipHandler),
+            (r"/scholarship/apply", ScholarshipApplyHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
             (r"/content/([-\w]+)", ContentHandler),
@@ -155,6 +156,80 @@ class ScholarshipHandler(BaseHandler):
     def get(self):
         u = self.get_current_user()
         self.render("scholarship.html", user=u.get("handle", None))
+
+# TODO: in general, why is the tornado templating engine so fragile? Can there be ignore KeyErrors and more properties of None?
+
+class ScholarshipApplyHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        application_id = self.get_argument('application_id', None)
+        form_req_params = ['fullname', 'dob', 'email', 'phonenumber', 'address', 
+                           'citystate', 'country', 'highschool', 'hscity', 'hsgpa', 
+                           'hsrank', 'uiucmajor', 'extracurricular', 'awards',
+                           'workexperience', 'interests', 'personalstatement',
+                           'legacy']
+        doc = {k: "" for k in form_req_params}
+        doc["application_id"] = ""
+
+        if application_id is not None:
+            coll = self.application.db["scholarships"]
+            doc = coll.find_one({"application_id": application_id})
+
+        self.render("scholarship-apply.html", user=u.get("handle", None), form_data=doc, error=None)
+
+    def post(self):
+        u = self.get_current_user()
+        action = self.get_argument('action', None)
+        application_id = self.get_argument('application_id', None)
+
+        if application_id and len(application_id) == 0:
+            application_id = None
+
+        if action not in ['save', 'submit']:
+            raise HTTPError(400)    # User cannot trigger this in normal usage
+
+        # Save/submit application -- give ID if needed.
+        coll = self.application.db["scholarships"]
+        form_req_params = ['fullname', 'dob', 'email', 'phonenumber', 'address', 
+                           'citystate', 'country', 'highschool', 'hscity', 'hsgpa', 
+                           'hsrank', 'uiucmajor', 'extracurricular', 'awards',
+                           'workexperience', 'interests', 'personalstatement',
+                           'legacy']
+        doc = {k: "" for k in form_req_params}
+        doc["application_id"] = ""
+
+        # TODO: application_id assignment process is not thread-safe.
+        if application_id is None:
+            while 1:
+                application_id = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") for i in range(6))
+
+                # Make sure application_id is unique
+                doc = coll.find_one({"application_id": application_id})
+                if doc is None:
+                    # Now create it and continue
+                    doc = {"application_id": application_id, "finalized": False}
+                    coll.save(doc)
+                    break
+        else:
+            # Check application is not already submitted (submit = locked)
+            doc = coll.find_one({"application_id": application_id})
+            if doc is not None and doc["finalized"] == True:
+                self.render("scholarship-apply.html", user=u.get("handle", None), form_data=doc, error="finalized")
+
+        # Update and save this application. (action = "save" or "submit")
+        for kw in form_req_params:
+            val = self.get_argument(kw, None)
+            if val is not None:
+                doc[kw] = val
+        coll.save(doc)
+
+        if action == 'submit':
+            # Submit this application.
+            doc["finalized"] = True
+            coll.save(doc)
+
+        # Render page, no errors (normal behavior)
+        self.render("scholarship-apply.html", user=u.get("handle", None), form_data=doc, error=None)
 
 class ContentHandler(BaseHandler):
     def get(self, what):

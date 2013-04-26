@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        p {
+            margin-top: 1em;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        th {
+            padding-top: 25px;
+            padding-bottom: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+        }
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div style="float: right;">
+            <a href="/"><span class="nav-link">About</span></a>
+            <span class="nav-link">Rush</span>
+            <a href="/philanthropy"><span class="nav-link">Philanthropy</span></a>
+            <span class="nav-link nav-current">Scholarship</span>
+            <span class="nav-link">Members</span>
+            {% if user %}
+                <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
+            {% else %}
+                <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
+            {% end %}
+        </div>
+        <div style="padding-top: 4px;">
+            <!--<span class="subnav-link subnav-current">Welcome</span>-->
+        </div>
+    </div>
+
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_16" style="text-align: center;">
+        <div style="width: 720px; margin-left: 100px;">
+            {% if error == "finalized" or form_data.get("finalized", False) == True %}
+                This application has already been submitted and is pending review. If you have any urgent changes you need to submit, please contact <a href="mailto:triangle.uiuc.rvp@gmail.com">triangle.uiuc.rvp@gmail.com</a> directly with your application ID ({{ form_data["application_id"] }}).
+            {% else %}
+                {% if form_data["application_id"] == "" %}
+                    Welcome! Please fill out the following form. If a field does not apply to you write N/A.
+                {% else %}
+                    Welcome back! This form has been saved, but has NOT yet been submitted! Please press submit when you are ready. To access this page again please save the following URL: <a id="locSAVE" href="/scholarship/apply?application_id={{ form_data['application_id'] }}">/scholarship/apply?application_id={{ form_data["application_id"] }}</a>
+                {% end %}
+            {% end %}
+        </div>
+        <form action="/scholarship/apply" method="POST">
+            <input type="hidden" name="action" value="" />
+            <input type="hidden" name="application_id" value="{{ form_data['application_id'] }}" />
+            <table style="margin-left: 100px; width: 720px;">
+            <tr><th colspan=2><b>Basic Info</b></th></tr>
+            <tr>
+                <td style="width: 250px;">Full Name</td>
+                <td style="width: 450px;"><input type="text" name="fullname" value="{{ form_data.get('fullname', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Date of Birth (mm/dd/yyyy)</td>
+                <td><input type="text" name="dob" value="{{ form_data.get('dob', '') }}" /></td>
+            </tr>
+            <tr><th colspan=2><b>Contact Info</b></th></tr>
+            <tr>
+                <td>Email Address</td>
+                <td><input type="text" name="email" value="{{ form_data.get('email', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td><input type="text" name="phonenumber" value="{{ form_data.get('phonenumber', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><input type="text" name="address" value="{{ form_data.get('address', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>City, State</td>
+                <td><input type="text" name="citystate" value="{{ form_data.get('citystate', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td><input type="text" name="country" value="{{ form_data.get('country', '') }}" /></td>
+            </tr>
+            <tr><th colspan=2><b>Educational Info</b></th></tr>
+            <tr>
+                <td>High School Name</td>
+                <td><input type="text" name="highschool" value="{{ form_data.get('highschool', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>High School City</td>
+                <td><input type="text" name="hscity" value="{{ form_data.get('hscity', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>High School GPA</td>
+                <td><input type="text" name="hsgpa" value="{{ form_data.get('hsgpa', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Class Rank/Out Of</td>
+                <td><input type="text" name="hsrank" value="{{ form_data.get('hsrank', '') }}" /></td>
+            </tr>
+            <tr>
+                <td>Intended UIUC Major</td>
+                <td><input type="text" name="uiucmajor" value="{{ form_data.get('uiucmajor', '') }}" /></td>
+            </tr>
+            <tr><th colspan=2><b>Free Response</b></th></tr>
+            <tr>
+                <td>Extracurricular Activities</td>
+                <td><textarea name="extracurricular">{{ form_data.get('extracurricular', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Honors and Awards</td>
+                <td><textarea name="awards">{{ form_data.get('awards', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Work Experience</td>
+                <td><textarea name="workexperience">{{ form_data.get('workexperience', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Interests</td>
+                <td><textarea name="interests">{{ form_data.get('interests', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Personal Statement</td>
+                <td><textarea name="personalstatement">{{ form_data.get('personalstatement', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td>Are any of your immediate relatives members of Triangle?<br/>If so, who?</td>
+                <td><textarea name="legacy">{{ form_data.get('legacy', '') }}</textarea></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div id="save-button" style="cursor: pointer; float: left; margin-top: 20px; padding: 3px 20px; text-align: center; background-color: #888;">
+                        <b>Save and Finish Later</b>
+                    </div>
+                    <div id="submit-button" style="cursor: pointer; float: left; margin-left: 5px; margin-top: 20px; padding: 3px 20px; text-align: center; background-color: #990033; color: white;">
+                        <b>Submit</b>
+                    </div>
+                </td>
+            </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+    <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/content.js"></script>
+
+    <script type="text/html" id="content-template">
+        {% if user %}
+            <div class="content-controller">
+                <div style="cursor: pointer; float: left;" class="content-edit"><i class="icon-pencil"></i> Edit This Section</div>
+                <div style="cursor: pointer; float: left; display: none;" class="content-save"><i class="icon-upload-alt"></i> Save Changes</div>
+                <div style="cursor: pointer; float: right; display: none;" class="content-cancel"><i class="icon-remove"></i> Cancel</div>
+            </div>
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% else %}
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% end %}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            content_init();
+
+            $("#locSAVE").prepend(window.location.origin);
+
+            $("#save-button").click(function () {
+                $("input[name='action']").val("save");
+                $("form").submit();
+            });
+
+            $("#submit-button").click(function () {
+                $("input[name='action']").val("submit");
+                $("form").submit();
+            });
+
+            // Disable fields if necesary.
+            {% if form_data.get('finalized', False) == True %}
+                $("input").attr("disabled", "disabled");
+                $("textarea").attr("disabled", "disabled");
+            {% end %}
+        });
+    </script>
+{% end %}
