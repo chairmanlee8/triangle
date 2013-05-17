@@ -214,7 +214,7 @@ class ScholarshipApplyHandler(BaseHandler):
         # TODO: application_id assignment process is not thread-safe.
         if application_id is None:
             while 1:
-                application_id = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") for i in range(6))
+                application_id = ''.join(random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") for i in range(11))
 
                 # Make sure application_id is unique
                 doc = coll.find_one({"application_id": application_id})
