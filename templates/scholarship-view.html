@@ -23,11 +23,16 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 130px;
         }
 
         table, td, th {
             border: 1px solid #F2F2F2;
             border-collapse: collapse;
+        }
+
+        select {
+            width: 100%;
         }
 
         .controls {
@@ -87,7 +92,7 @@
                 <tr>
                     <td>{{ s.get('fullname', '') }}</td>
                     <td>{{ s.get('email', '') }}</td>
-                    <td>{{ s.get('citystate', '') }} +{{ s.get('country', '') }}</td>
+                    <td>{{ s.get('citystate', '') }} + {{ s.get('country', '') }}</td>
                     <td>{{ s.get('highschool', '') }}</td>
                     <td>{{ s.get('uiucmajor', '') }}</td>
                     <td>
