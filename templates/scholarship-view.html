@@ -90,7 +90,7 @@
             </tr>
             {% for s in scholarships %}
                 <tr>
-                    <td>{{ s.get('fullname', '') }}</td>
+                    <td><a href="/scholarship/apply?application_id={{ s.get('application_id', '') }}">{{ s.get('fullname', '') }}</a></td>
                     <td>{{ s.get('email', '') }}</td>
                     <td>{{ s.get('citystate', '') }} + {{ s.get('country', '') }}</td>
                     <td>{{ s.get('highschool', '') }}</td>
