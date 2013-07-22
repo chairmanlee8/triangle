@@ -58,6 +58,7 @@ class Application(tornado.web.Application):
             (r"/scholarship", ScholarshipHandler),
             (r"/scholarship/apply", ScholarshipApplyHandler),
             (r"/scholarship/view", ScholarshipViewHandler),
+            (r"/rush", RushHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
             (r"/content/([-\w]+)", ContentHandler),
@@ -107,6 +108,11 @@ class IndexHandler(BaseHandler):
     def get(self):
         u = self.get_current_user()
         self.render("index.html", user=u.get("handle", None))
+
+class RushHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        self.render("rush-public.html", user=u.get("handle", None))
 
 class InviteHandler(BaseHandler):
     def get(self):
