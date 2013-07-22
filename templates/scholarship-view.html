@@ -11,6 +11,7 @@
         table {
             margin-left: auto;
             margin-right: auto;
+            table-layout: fixed;
         }
 
         th {
@@ -19,6 +20,9 @@
 
         td, th {
             padding: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         table, td, th {
@@ -73,8 +77,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email</th>
-                <th>City/State</th>
-                <th>Country</th>
+                <th>City/State + Country</th>
                 <th>High School</th>
                 <th>UIUC Major</th>
                 <th>Interview Stage</th>
@@ -84,8 +87,7 @@
                 <tr>
                     <td>{{ s.get('fullname', '') }}</td>
                     <td>{{ s.get('email', '') }}</td>
-                    <td>{{ s.get('citystate', '') }}</td>
-                    <td>{{ s.get('country', '') }}</td>
+                    <td>{{ s.get('citystate', '') }} +{{ s.get('country', '') }}</td>
                     <td>{{ s.get('highschool', '') }}</td>
                     <td>{{ s.get('uiucmajor', '') }}</td>
                     <td>
