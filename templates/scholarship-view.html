@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block appendHead %}
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css" />
+
+    <style type="text/css">
+        p {
+            margin-top: 1em;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        td, th {
+            padding: 5px;
+        }
+
+        table, td, th {
+            border: 1px solid #F2F2F2;
+            border-collapse: collapse;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .controls > button {
+            padding: 5px;
+            border: 1px solid black;
+        }
+    </style>
+{% end %}
+
+{% block content %}
+    <div class="clear" style="height: 10px;"></div>
+    <div class="grid_4 suffix_1">
+        <img src="/static/images/trilogo-red.png" />
+    </div>
+    <div class="grid_11" style="padding-top: 51px;">
+        <div style="float: right;">
+            <a href="/"><span class="nav-link">About</span></a>
+            <span class="nav-link">Rush</span>
+            <a href="/philanthropy"><span class="nav-link">Philanthropy</span></a>
+            <span class="nav-link nav-current">Scholarship</span>
+            <span class="nav-link">Members</span>
+            {% if user %}
+                <a href="/auth/logout"><span class="nav-link nav-logout">Logout ({{ user }})</span></a>
+            {% else %}
+                <a href="/auth/login"><span class="nav-link nav-logout">Login</span></a>
+            {% end %}
+        </div>
+        <div style="padding-top: 4px;">
+            <!--<span class="subnav-link subnav-current">Welcome</span>-->
+        </div>
+    </div>
+
+    <div class="clear" style="height: 20px;"></div>
+    <div class="grid_16">
+        <div class="controls">
+            {% if superuser %}
+                <button>Delete All</button>
+            {% end %}
+            <button>Compare Selected</button>
+        </div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>City/State</th>
+                <th>Country</th>
+                <th>High School</th>
+                <th>UIUC Major</th>
+                <th>Interview Stage</th>
+                {% if superuser %}<th></th>{% end %}
+            </tr>
+            {% for s in scholarships %}
+                <tr>
+                    <td>{{ s.get('fullname', '') }}</td>
+                    <td>{{ s.get('email', '') }}</td>
+                    <td>{{ s.get('citystate', '') }}</td>
+                    <td>{{ s.get('country', '') }}</td>
+                    <td>{{ s.get('highschool', '') }}</td>
+                    <td>{{ s.get('uiucmajor', '') }}</td>
+                    <td>
+                        <select>
+                            <option value="">None</option>
+                            <option value="declined">Declined by Triangle</option>
+                            <option value="userDeclined">Declined by Recipient</option>
+                            <option value="offered">Scholarship Offered</option>
+                            <option value="interviewing">Interview Requested</option>
+                            <option value="interviewed">Interviewed</option>
+                        </select>
+                    </td>
+                    {% if superuser %}<td>Delete</td>{% end %}
+                </tr>
+            {% end %}
+        </table>
+    </div>
+
+    <div class="clear" style="height: 10px;"></div>
+{% end %}
+
+{% block appendBody %}
+    <script type="text/javascript" src="/static/js/jquery.jeditable.mini.js"></script>
+    <script type="text/javascript" src="/static/js/slides.jquery.js"></script>
+    <script type="text/javascript" src="/static/js/content.js"></script>
+
+    <script type="text/html" id="content-template">
+        {% if user %}
+            <div class="content-controller">
+                <div style="cursor: pointer; float: left;" class="content-edit"><i class="icon-pencil"></i> Edit This Section</div>
+                <div style="cursor: pointer; float: left; display: none;" class="content-save"><i class="icon-upload-alt"></i> Save Changes</div>
+                <div style="cursor: pointer; float: right; display: none;" class="content-cancel"><i class="icon-remove"></i> Cancel</div>
+            </div>
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% else %}
+            <div class="content-view" style="clear: both;">
+            </div>
+        {% end %}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            content_init();
+        });
+    </script>
+{% end %}

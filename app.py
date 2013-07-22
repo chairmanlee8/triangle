@@ -57,6 +57,7 @@ class Application(tornado.web.Application):
             (r"/philanthropy", PhilanthropyHandler),
             (r"/scholarship", ScholarshipHandler),
             (r"/scholarship/apply", ScholarshipApplyHandler),
+            (r"/scholarship/view", ScholarshipViewHandler),
             (r"/auth/login", LoginHandler),
             (r"/auth/logout", LogoutHandler),
             (r"/content/([-\w]+)", ContentHandler),
@@ -171,6 +172,21 @@ class ScholarshipHandler(BaseHandler):
         self.render("scholarship.html", user=u.get("handle", None))
 
 # TODO: in general, why is the tornado templating engine so fragile? Can there be ignore KeyErrors and more properties of None?
+
+class ScholarshipViewHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        if not u:
+            raise HTTPError(403)
+
+        # Get all scholarships
+        exclude_params = ['extracurricular', 'awards', 'workexperience', 'interests', 'personalstatement', 'legacy']
+        exclude_dict = {}
+        for p in exclude_params:
+            exclude_dict[p] = False
+        scholarships = self.application.db["scholarships"].find(fields=exclude_dict)
+
+        self.render("scholarship-view.html", user=u.get("handle", None), superuser=u.get("superuser", False), scholarships=scholarships)
 
 class ScholarshipApplyHandler(BaseHandler):
     def get(self):
