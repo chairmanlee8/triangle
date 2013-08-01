@@ -104,6 +104,7 @@
                             <option value="offered">Scholarship Offered</option>
                             <option value="interviewing">Interview Requested</option>
                             <option value="interviewed">Interviewed</option>
+                            <option value="accepted">Accepted</option>
                         </select>
                     </td>
                     {% if superuser %}<td><a href="#" class="delete-application" data-application-name="{{ s.get('fullname', '') }}" data-application-id="{{ s.get('application_id', '') }}">Delete</a></td>{% end %}
