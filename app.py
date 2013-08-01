@@ -200,13 +200,33 @@ class ScholarshipApplyHandler(BaseHandler):
         application_id = self.get_argument('application_id', None)
         coll = self.application.db["scholarships"]
 
-        if not u:
+        if not u or not u['superuser']:
             raise HTTPError(403)
 
         if not (len(application_id) == 6 or len(application_id) == 11):
             raise HTTPError(400)
 
         coll.remove({"application_id": application_id})
+        self.write(json_encode({"error": "ok"}))
+        self.finish()
+
+    def put(self):
+        # TODO: Lol, totally hijacked REST. Anyways the PUT functionality allows one to change the application state.
+        u = self.get_current_user()
+        application_id = self.get_argument('application_id')
+        application_status = self.get_argument('application_status', '')
+
+        if not u or not u['superuser']:
+            raise HTTPError(403)
+
+        coll = self.application.db["scholarships"]
+        doc = coll.find_one({"application_id": application_id})
+
+        if doc is None:
+            raise HTTPError(404)
+
+        doc["status"] = application_status
+        coll.save(doc)
         self.write(json_encode({"error": "ok"}))
         self.finish()
 

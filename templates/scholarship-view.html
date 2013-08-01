@@ -97,7 +97,7 @@
                     <td>{{ s.get('highschool', '') }}</td>
                     <td>{{ s.get('uiucmajor', '') }}</td>
                     <td>
-                        <select>
+                        <select class="notify-application" data-init="{{ s.get('status', '') }}" data-application-id="{{ s.get('application_id', '') }}">
                             <option value="">None</option>
                             <option value="declined">Declined by Triangle</option>
                             <option value="userDeclined">Declined by Recipient</option>
@@ -153,6 +153,23 @@
                         }
                     });
                 }
+            });
+
+            $(".notify-application").each(function (index, elem) {
+                $(elem).val($(elem).data("init"));
+            })
+
+            $(".notify-application").change(function () {
+                $.ajax("/scholarship/apply?application_id=" + $(this).data("application-id") + "&application_status=" + $(this).attr("value"),
+                {
+                    type: "PUT",
+                    success: function () {
+
+                    },
+                    error: function () {
+                        alert("Oops! Could not change status for some reason.");
+                    }
+                });
             });
         });
     </script>
