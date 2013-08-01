@@ -195,6 +195,21 @@ class ScholarshipViewHandler(BaseHandler):
         self.render("scholarship-view.html", user=u.get("handle", None), superuser=u.get("superuser", False), scholarships=scholarships)
 
 class ScholarshipApplyHandler(BaseHandler):
+    def delete(self):
+        u = self.get_current_user()
+        application_id = self.get_argument('application_id', None)
+        coll = self.application.db["scholarships"]
+
+        if not u:
+            raise HTTPError(403)
+
+        if not (len(application_id) == 6 or len(application_id) == 11):
+            raise HTTPError(400)
+
+        coll.remove({"application_id": application_id})
+        self.write(json_encode({"error": "ok"}))
+        self.finish()
+
     def get(self):
         u = self.get_current_user()
         application_id = self.get_argument('application_id', None)
@@ -216,6 +231,7 @@ class ScholarshipApplyHandler(BaseHandler):
         u = self.get_current_user()
         action = self.get_argument('action', None)
         application_id = self.get_argument('application_id', None)
+        coll = self.application.db["scholarships"]
 
         if application_id and len(application_id) == 0:
             application_id = None
@@ -224,7 +240,6 @@ class ScholarshipApplyHandler(BaseHandler):
             raise HTTPError(400)    # User cannot trigger this in normal usage
 
         # Save/submit application -- give ID if needed.
-        coll = self.application.db["scholarships"]
         form_req_params = ['fullname', 'dob', 'email', 'phonenumber', 'address', 
                            'citystate', 'country', 'highschool', 'hscity', 'hsgpa', 
                            'hsrank', 'uiucmajor', 'extracurricular', 'awards',

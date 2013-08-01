@@ -106,7 +106,7 @@
                             <option value="interviewed">Interviewed</option>
                         </select>
                     </td>
-                    {% if superuser %}<td>Delete</td>{% end %}
+                    {% if superuser %}<td><a href="#" class="delete-application" data-application-name="{{ s.get('fullname', '') }}" data-application-id="{{ s.get('application_id', '') }}">Delete</a></td>{% end %}
                 </tr>
             {% end %}
         </table>
@@ -139,6 +139,21 @@
         $(document).ready(function ()
         {
             content_init();
+
+            $(".delete-application").click(function () {
+                if(confirm("Are you sure you want to delete the application from: " + $(this).data("application-name") + "?")) {
+                    $.ajax("/scholarship/apply?application_id=" + $(this).data("application-id"), 
+                    {
+                        type: "DELETE",
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function () {
+                            alert("Oops! Could not delete for some reason.");
+                        }
+                    });
+                }
+            });
         });
     </script>
 {% end %}
