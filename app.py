@@ -53,6 +53,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r"/", IndexHandler),
             (r"/invite", InviteHandler),
+            (r"/grant", GrantHandler),
             (r"/register", RegisterHandler),
             (r"/philanthropy", PhilanthropyHandler),
             (r"/scholarship", ScholarshipHandler),
@@ -75,6 +76,8 @@ class Application(tornado.web.Application):
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         coll = self.application.db["users"]
+        if not self.get_secure_cookie("user"):
+            return {}
         return coll.find_one({"handle": self.get_secure_cookie("user")}) or {}
 
 class LoginHandler(BaseHandler):
@@ -133,6 +136,31 @@ class InviteHandler(BaseHandler):
         coll.save({"regcode": regcode, "username": username})
 
         self.redirect("/register?regcode=%s&username=%s" % (regcode, username))
+
+class GrantHandler(BaseHandler):
+    def get(self):
+        u = self.get_current_user()
+        if u and u['superuser']:
+            self.render("grant.html")
+        else:
+            self.redirect('/')
+
+    def post(self):
+        u = self.get_current_user()
+        if not u or not u['superuser']:
+            raise HTTPError(403)
+
+        username = self.get_argument("username")
+        coll = self.application.db["users"]
+        result = coll.find_one({"handle": username})
+
+        if result is None:
+            raise HTTPError(404)
+
+        result["superuser"] = 1
+        coll.save(result)
+
+        self.redirect('/')
 
 class RegisterHandler(BaseHandler):
     def get(self):
@@ -368,6 +396,16 @@ class ContentHandler(BaseHandler):
 def main():
     tornado.options.parse_command_line()
     application = Application()
+
+    # Create admin user with password "ruby.o.harder!" as temporary password
+    coll = application.db["users"]
+    result = coll.find_one({"handle": "APL"})
+
+    if not result:
+        print "Creating APL user..."
+        doc = {"handle": "APL", "password": hashlib.sha1("ruby.o.harder!").hexdigest(), "superuser": 1}
+        coll.save(doc)
+
     tornadio2.server.SocketServer(application)
 
 if __name__ == "__main__":
